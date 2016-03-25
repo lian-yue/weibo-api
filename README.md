@@ -2,4 +2,4 @@
 
 # Composer 安装
 
-    composer require lianyue/baidu-api
+    composer require lianyue/weibo-api
