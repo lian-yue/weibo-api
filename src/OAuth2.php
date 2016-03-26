@@ -12,6 +12,8 @@ class OAuth2
 
     protected $clientSecret;
 
+    protected $state;
+
     protected $accessToken;
 
     protected $redirectUri;
@@ -64,6 +66,21 @@ class OAuth2
     }
 
 
+    public function getState()
+    {
+        if (!$this->state) {
+            $this->state = md5(uniqid(mt_rand(), true));
+        }
+        return $this->state;
+    }
+
+    public function setState($state)
+    {
+        $this->state = (string) $state;
+        return $this;
+    }
+
+
     public function setRequestOptions(array $requestOptions = array())
     {
         $this->requestOptions =  $requestOptions;
@@ -83,8 +100,11 @@ class OAuth2
             if (empty($params['code'])) {
                 throw new InvalidArgumentException('Code parameter is empty');
             }
+            if (empty($params['state']) || $params['state'] !== $this->getState()) {
+                throw new InvalidArgumentException('State parameter error (CSRF)');
+            }
             $request = $this->request('POST', 'oauth2/access_token', array(), array(), array(
-                'grant_type' => 'authorization_code',
+                'grant_type' => empty($params['grant_type']) ? 'authorization_code' : $params['grant_type'],
                 'client_id' => $this->getClientId(),
                 'client_secret' => $this->getClientSecret(),
                 'code' => $params['code'],
@@ -108,6 +128,11 @@ class OAuth2
 
     public function getAuthorizeUri(array $params = array())
     {
+
+        if (!empty($params['state'])) {
+            $this->setState($params['state']);
+        }
+
         if (!empty($params['redirect_uri'])) {
             $this->setRedirectUri($params['redirect_uri']);
         } else {
@@ -119,6 +144,7 @@ class OAuth2
 
         $params = array(
 			'client_id' => $this->getClientId(),
+            'state' => $this->getState(),
 		) + $params + array(
             'response_type'	=> 'code',
         );
@@ -157,7 +183,6 @@ class OAuth2
         $this->accessToken = $accessToken + $this->accessToken;
         return $this->accessToken;
     }
-
 
 
 
