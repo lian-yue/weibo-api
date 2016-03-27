@@ -7,7 +7,7 @@
 define('CLIENT_ID', '');
 
 // Client Key  Secret Key
-define('CLIENT_KEY', '');
+define('CLIENT_SELECT', '');
 
 
 

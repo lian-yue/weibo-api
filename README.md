@@ -31,7 +31,7 @@ http://open.weibo.com/wiki/%E5%BE%AE%E5%8D%9AAPI
 
     namespace LianYue\WeiboApi;
 
-    $oauth2 = new OAuth2(CLIENT_ID, CLIENT_KEY);
+    $oauth2 = new OAuth2(CLIENT_ID, CLIENT_SELECT);
     $oauth2->setRedirectUri(CALLBACK_URI);
     try {
         // 设置 state
@@ -50,10 +50,10 @@ http://open.weibo.com/wiki/%E5%BE%AE%E5%8D%9AAPI
 
         // 其他api调用
         print_r($this->api('GET', '/statuses/mentions.json')->response()->getJson(false));
-    } catch (BaiduApiException $e) {
+    } catch (WeiboApiException $e) {
 
         // 获取重定向链接
-        $uri = $oauth2->getAuthorizeUri(['display' => 'pc']);
+        $uri = $oauth2->getAuthorizeUri();
 
         // 储存 state
         setcookie('weibo_api_state', $oauth2->getState(), time() + 86400, '/');

@@ -5,7 +5,7 @@ require __DIR__ . '/config.php';
 // 链接登录页面
 
 
-$oauth2 = new OAuth2(CLIENT_ID, CLIENT_KEY);
+$oauth2 = new OAuth2(CLIENT_ID, CLIENT_SELECT);
 
 $oauth2->setRedirectUri(URI_BASE . 'callback.php');
 

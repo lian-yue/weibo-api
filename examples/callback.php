@@ -3,7 +3,7 @@ namespace LianYue\WeiboApi;
 require __DIR__ . '/config.php';
 
 
-$oauth2 = new OAuth2(CLIENT_ID, CLIENT_KEY);
+$oauth2 = new OAuth2(CLIENT_ID, CLIENT_SELECT);
 $oauth2->setRedirectUri(URI_BASE . 'callback.php');
 $accessToken = $oauth2->getAccessToken();
 setcookie('weibo_oauth2_access_token', json_encode($accessToken), time() + 86400, '/');
